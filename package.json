@@ -1,0 +1,32 @@
+{
+  "name": "vercel-ai-shopsavvy",
+  "version": "0.1.0",
+  "description": "Vercel AI SDK tools for ShopSavvy product search and price comparison",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bash test.sh"
+  },
+  "keywords": ["vercel-ai", "ai-sdk", "shopsavvy", "shopping", "price-comparison", "tools"],
+  "license": "MIT",
+  "author": "Monolith Technologies, Inc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shopsavvy/vercel-ai-shopsavvy"
+  },
+  "dependencies": {
+    "@shopsavvy/sdk": "latest",
+    "ai": "^4.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@ai-sdk/openai": "^1.0.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "peerDependencies": {
+    "ai": ">=4.0.0"
+  }
+}
