@@ -1,25 +1,23 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+cd "$(dirname "$0")"
 
 echo "=== vercel-ai-shopsavvy tests ==="
 
-echo "Checking project structure..."
-test -f src/index.ts && echo "  src/index.ts exists"
-test -f src/example.ts && echo "  src/example.ts exists"
-test -f package.json && echo "  package.json exists"
-test -f tsconfig.json && echo "  tsconfig.json exists"
-test -f README.md && echo "  README.md exists"
-test -f LICENSE && echo "  LICENSE exists"
+echo "==> bun install"
+bun install
 
-echo "Checking TypeScript validity..."
-npx tsc --noEmit 2>/dev/null && echo "  TypeScript compiles successfully" || echo "  TypeScript check skipped (install deps first: npm install)"
+echo "==> typecheck"
+bun run typecheck
 
-echo "Checking tool definitions..."
-grep -q "tool(" src/index.ts && echo "  Vercel AI tool() definitions found"
-grep -q "searchProducts" src/index.ts && echo "  searchProducts tool defined"
-grep -q "getOffers" src/index.ts && echo "  getOffers tool defined"
-grep -q "getPriceHistory" src/index.ts && echo "  getPriceHistory tool defined"
-grep -q "getDeals" src/index.ts && echo "  getDeals tool defined"
+echo "==> build"
+bun run build
+for f in dist/index.js dist/index.cjs dist/index.d.ts dist/index.d.cts; do
+  [ -f "$f" ] || { echo "ERROR: build artifact missing: $f"; exit 1; }
+done
 
-echo ""
+echo "==> bun test"
+bun test
+
 echo "All checks passed!"
