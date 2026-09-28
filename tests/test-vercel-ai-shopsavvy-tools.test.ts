@@ -113,18 +113,25 @@ describe('createShopSavvyTools', () => {
       {
         title: 'Apple AirPods Pro (2nd Generation)',
         offers: [
-          { retailer: 'amazon.com', price: 189.99, currency: 'USD', availability: 'in_stock', condition: 'new', url: 'https://www.amazon.com/dp/B0CHWRXH8B' },
-          { retailer: 'bestbuy.com', price: 199.99, currency: 'USD', availability: 'in_stock', condition: 'new', url: 'https://www.bestbuy.com/site/1' },
+          { retailer: 'Amazon', price: 189.99, currency: 'USD', availability: 'in', condition: 'new', url: 'https://www.amazon.com/dp/B0CHWRXH8B' },
+          { retailer: 'Best Buy', price: 199.99, currency: 'USD', availability: 'in', condition: 'new', url: 'https://www.bestbuy.com/site/1' },
         ],
       },
     ])
     expect(outputs.getPriceHistory).toEqual([
       {
-        retailer: 'amazon.com',
-        url: 'https://www.amazon.com/dp/B0CHWRXH8B',
-        history: [
-          { timestamp: '2026-08-01T00:00:00Z', price: 249.0, currency: 'USD', availability: 'in_stock' },
-          { timestamp: '2026-08-15T00:00:00Z', price: 189.99, currency: 'USD', availability: 'in_stock' },
+        title: 'Apple AirPods Pro (2nd Generation)',
+        offers: [
+          {
+            retailer: 'Amazon',
+            condition: 'new',
+            url: 'https://www.amazon.com/dp/B0CHWRXH8B',
+            history: [
+              { timestamp: '2026-08-15T00:00:00Z', price: 189.99, currency: 'USD', availability: 'in' },
+              { timestamp: '2026-08-01T00:00:00Z', price: 249.0, currency: null, availability: undefined },
+            ],
+          },
+          { retailer: 'eBay', condition: 'used', url: 'https://www.ebay.com/itm/1234567890', history: [] },
         ],
       },
     ])

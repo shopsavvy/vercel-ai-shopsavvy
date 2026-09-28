@@ -52,7 +52,7 @@
     "url": "https://github.com/shopsavvy/vercel-ai-shopsavvy/issues"
   },
   "dependencies": {
-    "@shopsavvy/sdk": "^1.1.0"
+    "@shopsavvy/sdk": "^1.4.0"
   },
   "peerDependencies": {
     "ai": "^5.0.0 || ^6.0.0 || ^7.0.0",

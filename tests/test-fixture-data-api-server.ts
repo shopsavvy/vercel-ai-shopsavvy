@@ -63,26 +63,57 @@ export function startDataApiServer() {
                 title: 'Apple AirPods Pro (2nd Generation)',
                 shopsavvy: 'ss-airpods-pro-2',
                 offers: [
-                  { id: 'o1', retailer: 'amazon.com', price: 189.99, currency: 'USD', availability: 'in_stock', condition: 'new', URL: 'https://www.amazon.com/dp/B0CHWRXH8B' },
-                  { id: 'o2', retailer: 'bestbuy.com', price: 199.99, currency: 'USD', availability: 'in_stock', condition: 'new', URL: 'https://www.bestbuy.com/site/1' },
+                  { id: 'o1', retailer: 'Amazon', price: 189.99, currency: 'USD', availability: 'in', condition: 'new', seller: null, URL: 'https://www.amazon.com/dp/B0CHWRXH8B' },
+                  { id: 'o2', retailer: 'Best Buy', price: 199.99, currency: 'USD', availability: 'in', condition: 'new', seller: null, URL: 'https://www.bestbuy.com/site/1' },
                 ],
               },
             ],
             meta,
           })
         case '/v1/products/offers/history':
+          // One entry PER PRODUCT, each offer carrying its own `history`, newest first.
+          // `currency` is null on an archived point with none recorded, `availability`
+          // is absent when unknown, and eBay listings never carry history.
           return Response.json({
             success: true,
             data: [
               {
-                id: 'o1',
-                retailer: 'amazon.com',
-                price: 189.99,
-                currency: 'USD',
-                URL: 'https://www.amazon.com/dp/B0CHWRXH8B',
-                history: [
-                  { timestamp: '2026-08-01T00:00:00Z', price: 249.0, currency: 'USD', availability: 'in_stock' },
-                  { timestamp: '2026-08-15T00:00:00Z', price: 189.99, currency: 'USD', availability: 'in_stock' },
+                title: 'Apple AirPods Pro (2nd Generation)',
+                shopsavvy: 'ss-airpods-pro-2',
+                brand: 'Apple',
+                category: 'Headphones',
+                barcode: '0194253397137',
+                amazon: 'B0CHWRXH8B',
+                mpn: null,
+                images: ['https://x.shopsavvy.com/airpods.jpg'],
+                offers: [
+                  {
+                    id: 'o1',
+                    availability: 'in',
+                    condition: 'new',
+                    retailer: 'Amazon',
+                    currency: 'USD',
+                    price: 189.99,
+                    seller: null,
+                    URL: 'https://www.amazon.com/dp/B0CHWRXH8B',
+                    timestamp: '2026-08-15T00:00:00Z',
+                    history: [
+                      { availability: 'in', price: 189.99, currency: 'USD', timestamp: '2026-08-15T00:00:00Z' },
+                      { price: 249.0, currency: null, timestamp: '2026-08-01T00:00:00Z' },
+                    ],
+                  },
+                  {
+                    id: 'o3',
+                    availability: 'in',
+                    condition: 'used',
+                    retailer: 'eBay',
+                    currency: 'USD',
+                    price: 149.0,
+                    seller: 'audio_reseller',
+                    URL: 'https://www.ebay.com/itm/1234567890',
+                    timestamp: '2026-08-14T00:00:00Z',
+                    history: [],
+                  },
                 ],
               },
             ],

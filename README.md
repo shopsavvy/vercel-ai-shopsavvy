@@ -64,7 +64,7 @@ Get current offers from retailers for a product. Input: `identifier` (barcode, A
 
 ### `getPriceHistory`
 
-Get historical prices for a product. Input: `identifier`, `startDate` and `endDate` (`YYYY-MM-DD`; start must be before today, end today or earlier), optional `retailer` domain.
+Get historical prices for a product. Input: `identifier`, `startDate` and `endDate` (`YYYY-MM-DD`; start must be before today, end today or earlier), optional `retailer` domain. Returns one entry per product (`title`, `offers`), each offer with `retailer`, `condition`, `url` and its `history` of `{ timestamp, price, currency, availability }` points, newest first.
 
 ### `getDeals`
 

@@ -31,13 +31,15 @@ export type GetOffersInput = z.infer<typeof getOffersInput>
 export type GetPriceHistoryInput = z.infer<typeof getPriceHistoryInput>
 export type GetDealsInput = z.infer<typeof getDealsInput>
 
+// Product and offer fields are passed straight through from the Data API, which sends
+// an explicit JSON `null` (not an absent key) for an unknown value — hence `| null`.
 export interface SearchProductsOutput {
   products: Array<{
     title: string
-    brand: string | undefined
-    category: string | undefined
-    barcode: string | undefined
-    asin: string | undefined
+    brand: string | null | undefined
+    category: string | null | undefined
+    barcode: string | null | undefined
+    asin: string | null | undefined
     shopsavvy_id: string
     images: string[] | undefined
   }>
@@ -47,23 +49,32 @@ export interface SearchProductsOutput {
 export type GetOffersOutput = Array<{
   title: string
   offers: Array<{
-    retailer: string | undefined
-    price: number | undefined
-    currency: string | undefined
+    retailer: string | null | undefined
+    price: number | null | undefined
+    currency: string | null | undefined
     availability: string | undefined
-    condition: string | undefined
-    url: string | undefined
+    condition: string | null | undefined
+    url: string | null | undefined
   }>
 }>
 
+/**
+ * One entry per product, each with its offers, each offer carrying its price history
+ * (newest first) — the shape of the Data API's /products/offers/history response.
+ */
 export type GetPriceHistoryOutput = Array<{
-  retailer: string | undefined
-  url: string | undefined
-  history: Array<{
-    timestamp: string
-    price: number
-    currency: string | null | undefined
-    availability: string | undefined
+  title: string
+  offers: Array<{
+    retailer: string | null | undefined
+    condition: string | null | undefined
+    url: string | null | undefined
+    history: Array<{
+      timestamp: string
+      price: number
+      /** Null when the archived point recorded no currency. */
+      currency: string | null | undefined
+      availability: string | undefined
+    }>
   }>
 }>
 
@@ -166,18 +177,22 @@ export function createShopSavvyTools({ apiKey, baseUrl, timeout }: ShopSavvyTool
 
     getPriceHistory: tool({
       description:
-        'Get historical price data for a product over a date range. Helps determine if the current price is a good deal. The start date must be before today and the end date must be today or earlier.',
+        'Get historical price data for a product over a date range, per retailer offer (newest point first). Helps determine if the current price is a good deal. The start date must be before today and the end date must be today or earlier.',
       inputSchema: getPriceHistoryInput,
       execute: async ({ identifier, startDate, endDate, retailer }) => {
         const result = await client.getPriceHistory(identifier, startDate, endDate, { retailer })
-        return result.data.map((offer) => ({
-          retailer: offer.retailer,
-          url: offer.URL,
-          history: offer.history.map((h) => ({
-            timestamp: h.timestamp,
-            price: h.price,
-            currency: h.currency,
-            availability: h.availability,
+        return result.data.map((product) => ({
+          title: product.title,
+          offers: product.offers.map((offer) => ({
+            retailer: offer.retailer,
+            condition: offer.condition,
+            url: offer.URL,
+            history: offer.history.map((h) => ({
+              timestamp: h.timestamp,
+              price: h.price,
+              currency: h.currency,
+              availability: h.availability,
+            })),
           })),
         }))
       },
